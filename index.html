@@ -1,0 +1,140 @@
+"use client";
+import React from "react";
+
+function MainComponent() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("all");
+  const [selectedLevel, setSelectedLevel] = useState("all");
+
+  const courses = [
+    {
+      id: 1,
+      title: "数学応用コース",
+      subject: "math",
+      thumbnail: "/images/math-course.jpg",
+      progress: 65,
+      level: "advanced",
+      duration: "30時間",
+      description: "微分・積分から線形代数まで、大学レベルの数学を学びます",
+      target: "高校生・大学生",
+    },
+    {
+      id: 2,
+      title: "英語スピーキング",
+      subject: "english",
+      thumbnail: "/images/english-course.jpg",
+      progress: 30,
+      level: "intermediate",
+      duration: "20時間",
+      description: "ネイティブスピーカーとの実践的な会話練習",
+      target: "中級者向け",
+    },
+    {
+      id: 3,
+      title: "物理基礎",
+      subject: "physics",
+      thumbnail: "/images/physics-course.jpg",
+      progress: 0,
+      level: "beginner",
+      duration: "25時間",
+      description: "物理の基本概念から応用まで",
+      target: "初心者向け",
+    },
+  ];
+
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch = course.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesSubject =
+      selectedSubject === "all" || course.subject === selectedSubject;
+    const matchesLevel =
+      selectedLevel === "all" || course.level === selectedLevel;
+    return matchesSearch && matchesSubject && matchesLevel;
+  });
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <header className="mb-8">
+        <h1 className="text-3xl font-roboto font-bold text-gray-800">
+          コース一覧
+        </h1>
+      </header>
+
+      <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input
+            type="text"
+            placeholder="コースを検索..."
+            className="border rounded p-2"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select
+            className="border rounded p-2"
+            value={selectedSubject}
+            onChange={(e) => setSelectedSubject(e.target.value)}
+          >
+            <option value="all">全ての教科</option>
+            <option value="math">数学</option>
+            <option value="english">英語</option>
+            <option value="physics">物理</option>
+          </select>
+          <select
+            className="border rounded p-2"
+            value={selectedLevel}
+            onChange={(e) => setSelectedLevel(e.target.value)}
+          >
+            <option value="all">全てのレベル</option>
+            <option value="beginner">初級</option>
+            <option value="intermediate">中級</option>
+            <option value="advanced">上級</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {filteredCourses.map((course) => (
+          <div
+            key={course.id}
+            className="bg-white rounded-lg shadow-sm overflow-hidden"
+          >
+            <img
+              src={course.thumbnail}
+              alt={`${course.title}のサムネイル`}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <h3 className="font-bold text-lg mb-2">{course.title}</h3>
+              <p className="text-gray-600 text-sm mb-4">{course.description}</p>
+              <div className="mb-4">
+                <div className="text-sm text-gray-500 mb-1">進捗状況</div>
+                <div className="w-full h-2 bg-gray-200 rounded">
+                  <div
+                    className="h-full bg-blue-500 rounded"
+                    style={{ width: `${course.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center text-sm text-gray-500">
+                <span>
+                  <i className="fas fa-clock mr-1"></i>
+                  {course.duration}
+                </span>
+                <span>
+                  <i className="fas fa-user-graduate mr-1"></i>
+                  {course.target}
+                </span>
+              </div>
+              <button className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                コースの詳細を見る
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default MainComponent;
